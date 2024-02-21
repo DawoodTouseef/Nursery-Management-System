@@ -41,6 +41,9 @@
 
 								<label>Product Image</label>
 								{{ form.image(class='form-control') }}
+								{% for error in form.image.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
 							</div>
 						</div>
 					</div>
