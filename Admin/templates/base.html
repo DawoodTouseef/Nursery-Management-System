@@ -75,6 +75,28 @@
         {% endif %}
 
         <div class="container" id="page">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      {% if category == 'error' %}
+        <div class="alert alert-danger" role="alert" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% else %}
+        <div class="alert alert-success alter-dismissable fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 
         {% block body %}{% endblock %}
 
