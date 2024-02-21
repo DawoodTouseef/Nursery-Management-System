@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Plants Library{% endblock %}
+
+{% block body %}
+<div class="row pad">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body text-center">
+                <h3 class="bold"><i class="glyphicon glyphicon-dashboard"></i> Admin Dashboard</h3>
+            </div>
+        </div>
+    </div>
+    {% if products_in_stock %}
+    <div class="col-lg-12">
+        <ul class="summary">
+            <li class="">Pending Orders <span class="badge">{{ orders|length }}</span></li>
+            <li class="">Products In Stock <span class="badge">{{ products_in_stock }}</span></li>
+            <li class="">Products Out of Stock <span class="badge">{{ products|length - products_in_stock }}</span></li>
+            <li class="">Total Products <span class="badge">{{ products|length }}</span></li>
+        </ul>
+    </div>
+    {% else %}
+    <div class="col-lg-12">
+        <ul class="summary">
+            <li class="">Pending Orders <span class="badge">0</span></li>
+            <li class="">Products In Stock <span class="badge">0</span></li>
+            <li class="">Products Out of Stock <span class="badge">0</span></li>
+            <li class="">Total Products <span class="badge">0</span></li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+<div class="row pad">
+    {% if orders %}
+    <div class="col-lg-6 pad">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Pending Orders</h3>
+            </div>
+            <div class="panel-body">
+                Orders that have not been fully completed
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>REF</th><th>Customer</th><th>Total</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order['order_id'] }}</td>
+                            <td><a href="{{ url_for('order', order_id=order['order_id']) }}">{{ order['reference'] }}</a></td>
+                            <td>{{ order['First_Name'] }} {{ order['last_Name'] }}</td>
+                            <td>&#X20b9;{{ order['order_total']  }} </td>
+                            <td><span class="badge">{{ order['status'] }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if products %}
+    <div class="col-lg-6 pad">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Available Products</h3>
+            </div>
+            <div class="panel-body">
+                Products available in the products catalog
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Name</th><th>Price</th><th>Stock</th><th>Delete stock</th><th>Add stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <td>{{ product['p_id'] }}</td>
+                            <td>{{ product['p_name'] }}</td>
+                            <td>&#X20b9;{{ product['price'] }}</td>
+                            {% if product['stock_available'] >0 %}
+                            <td>{{ product['stock_available'] }} units</td>
+                            {% else %}
+                            <td>0 units</td>
+                            {% endif %}
+                            <td>
+                                <p>
+                                        <a href="{{ url_for('delete_stock', pid=product['p_id'],sid=product['supplier_id']) }}">
+                                    <button type="button" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-minus"></i>
+                                    </button></a>
+						        </p>
+                            </td>
+                            <td>
+                                <p>
+                                        <a href="{{ url_for('add_stock', pid=product['p_id'],sid=product['supplier_id']) }}">
+                                    <button type="button" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    </button></a>
+						        </p>
+                            </td>
+                            <td>
+                                <p>
+                                        <a href="{{ url_for('edit_product', id=product['p_id'],sid=product['supplier_id']) }}">
+                                    <button type="button" class="btn btn-danger btn-xs">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                    </button></a>
+						        </p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-lg-6 pad">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Available Products</h3>
+            </div>
+            <div class="panel-body">
+                Products available in the products catalog
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Name</th><th>Price</th><th>Stock</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

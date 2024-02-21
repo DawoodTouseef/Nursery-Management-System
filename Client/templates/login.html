@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Users-Login{% endblock %}
+{% block body %}
+<form method="POST">
+  <h3 align="center">User-Login</h3>
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      name="email"
+      placeholder="Enter email"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password"
+      name="password"
+      placeholder="Enter password"
+    />
+  </div>
+  <a href="http://0.0.0.0:2003/admin_login">Are you a Merchant?</a>
+  <a href="/users_signup">Don't Have a Account?</a>
+  <br>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+{% endblock %}
