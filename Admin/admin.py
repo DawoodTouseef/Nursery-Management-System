@@ -3,34 +3,37 @@ from flask_socketio import SocketIO
 from flask import *
 from flask_wtf import FlaskForm
 from flask_login import *
-from wtforms import StringField, IntegerField, TextAreaField
+from wtforms import StringField, IntegerField, TextAreaField,FileField
 import sqlite3
-
+from wtforms.validators import DataRequired
 
 app=Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'mysecret'
+app.config['UPLOAD_FOLDER'] = '/media/lenovo/Windows 10/Nursery-Management-System/Client/Product'
+
 #photos = UploadSet('photos', IMAGES)
 socket = SocketIO(app)
 #login Manger
 login_manager = LoginManager()
 login_manager.init_app(app)
-DATABASE="/media/lenovo/Windows 10/Nursery-DBMS/plants.db"
+DATABASE="./../plants.db"
+
 class AddProduct(FlaskForm):
     name = StringField('Name')
     price = IntegerField('Price')
     stock = IntegerField('Stock')
     description = TextAreaField('Description')
-    image=StringField("image")
-    #image = FileField('Image', validators=[FileAllowed(IMAGES, 'Only images are accepted.')])
+    #image=StringField("image")
+    image = FileField('Image', validators=[DataRequired()])
 
 class EditProduct(FlaskForm):
     name = StringField('Name')
     price = IntegerField('Price')
     stock = IntegerField('Stock')
     description = TextAreaField('Description')
-    image=StringField("image")
-    #image = FileField('Image', validators=[FileAllowed(IMAGES, 'Only images are accepted.')])
+    #image=StringField("image")
+    image = FileField('Image', validators=[DataRequired()])
 
 def get_db():
     db = sqlite3.connect(DATABASE)
@@ -41,7 +44,7 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
-        with app.open_resource('/media/lenovo/Windows 10/Nursery-DBMS/schema.sql', mode='r') as f:
+        with app.open_resource('./../schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
@@ -148,15 +151,18 @@ def admin(index):
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
+    import os
     form = AddProduct()
     db=get_db()
     if form.validate_on_submit():
         user_id = None
         if isinstance(current_user, Admin):
             user_id = current_user.s_id
+            image = form.image.data
+            filename = image.filename
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-
-        db.execute("INSERT INTO Product(p_name,price,stock_available,Description,supplier_id,image) VALUES(?,?,?,?,?,?);",(form.name.data, form.price.data, form.stock.data, form.description.data,user_id,form.image.data))
+        db.execute("INSERT INTO Product(p_name,price,stock_available,Description,supplier_id,image) VALUES(?,?,?,?,?,?);",(form.name.data, form.price.data, form.stock.data, form.description.data,user_id,filename))
 
         db.commit()
 

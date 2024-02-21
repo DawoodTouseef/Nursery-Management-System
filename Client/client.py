@@ -18,7 +18,7 @@ socket = SocketIO(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-DATABASE="/media/lenovo/Windows 10/Nursery-DBMS/plants.db"
+DATABASE="./../plants.db"
 
 class AddToCart(FlaskForm):
     quantity = IntegerField('Quantity')
@@ -46,7 +46,7 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
-        with app.open_resource('/media/lenovo/Windows 10/Nursery-DBMS/schema.sql', mode='r') as f:
+        with app.open_resource('./../schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
