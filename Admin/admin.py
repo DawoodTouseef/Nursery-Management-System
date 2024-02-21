@@ -158,9 +158,9 @@ def add():
         user_id = None
         if isinstance(current_user, Admin):
             user_id = current_user.s_id
-            image = form.image.data
-            filename = image.filename
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        image = form.image.data
+        filename = image.filename
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         db.execute("INSERT INTO Product(p_name,price,stock_available,Description,supplier_id,image) VALUES(?,?,?,?,?,?);",(form.name.data, form.price.data, form.stock.data, form.description.data,user_id,filename))
 
