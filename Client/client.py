@@ -23,7 +23,7 @@ def get_ip_address():
         return ip_address
     except Exception as e:
         print("Error:", e)
-        return None
+        return "127.0.0.1"
 
 
 app=Flask(__name__)

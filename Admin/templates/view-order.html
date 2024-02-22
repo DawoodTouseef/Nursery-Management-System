@@ -68,13 +68,13 @@
 					<a href="#details" aria-controls="details" role="tab" data-toggle="tab">Personal Details</a>
 				</li>
 			</ul>
-		
+
 			<!-- Tab panes -->
 			<div class="tab-content">
 				<div role="tabpanel" class="tab-pane active" id="shipping">
 					<h4 class="bold">Shipping Information</h4>
 					<p><i class="glyphicon glyphicon-user"></i> NAME: <strong>{{ order['First_Name'] + ' ' + order['last_Name'] }}</strong></p>
-					<p><i class="glyphicon glyphicon-map-marker"></i> ADDRESS: 
+					<p><i class="glyphicon glyphicon-map-marker"></i> ADDRESS:
 						<strong>{{ order['u_address'] }}</strong>
 					</p>
 					<p><i class="glyphicon glyphicon-th"></i> City: <strong>{{ order['city'] }}</strong></p>
@@ -82,12 +82,12 @@
 					<p><i class="glyphicon glyphicon-flag"></i> Country: <strong>{{ order['country'] }}</strong></p>
 					<hr />
 					<p>
-						<i class="glyphicon glyphicon-gift"></i> 
+						<i class="glyphicon glyphicon-gift"></i>
 						Delivery: <strong>Next Day Delivery</strong>
 					</p>
 					<hr />
 					<p>
-						<i class="glyphicon glyphicon-piggy-bank"></i> 
+						<i class="glyphicon glyphicon-piggy-bank"></i>
 						Payment Type: <strong>{{ order['PaymentType'] }}</strong>
 					</p>
 				</div>
@@ -96,7 +96,7 @@
 					<p><i class="glyphicon glyphicon-user"></i> NAME: <strong>{{ order['First_Name'] + ' ' + order['last_Name'] }}</strong></p>
 					<p><i class="glyphicon glyphicon-phone-alt"></i> PHONE: <strong>{{ order['u_contact'] }}</strong></p>
 					<p>
-						<i class="glyphicon glyphicon-envelope"></i> EMAIL: 
+						<i class="glyphicon glyphicon-envelope"></i> EMAIL:
 						<strong>{{ order['user_email'] }}</strong>
 					</p>
 				</div>
