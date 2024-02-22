@@ -22,7 +22,7 @@ def get_ip_address():
 
         return ip_address
     except Exception as e:
-        print("Error:", e)
+        print(f"Error: {e}")
         return "127.0.0.1"
 
 
