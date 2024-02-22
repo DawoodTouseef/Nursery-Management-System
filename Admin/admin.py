@@ -6,14 +6,32 @@ from flask_login import *
 from wtforms import StringField, IntegerField, TextAreaField,FileField
 import sqlite3
 from wtforms.validators import DataRequired
+import socket
+
+
+def get_ip_address():
+    try:
+        # Create a socket object
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Connect to any IP address and port (here, Google's public DNS server)
+        s.connect(('8.8.8.8', 80))
+
+        # Get the local IP address bound to the socket
+        ip_address = s.getsockname()[0]
+
+        return ip_address
+    except Exception as e:
+        print("Error:", e)
+        return None
+
 
 app=Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'mysecret'
 app.config['UPLOAD_FOLDER'] = '/media/lenovo/Windows 10/Nursery-Management-System/Client/Product'
-
-#photos = UploadSet('photos', IMAGES)
-socket = SocketIO(app)
+common_url=f'http://{get_ip_address()}:2802'
+sockets = SocketIO(app)
 #login Manger
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -242,7 +260,7 @@ def admin_login():
             # Invalid credentials
             flash('Invalid email or password. Please try again.', 'error')  # Error message
 
-    return render_template('login.html',user=current_user)
+    return render_template('login.html',user=current_user,common_url=common_url)
 
 @app.route('/admin_logout')
 @login_required
@@ -282,8 +300,8 @@ def admin_signup():
                 admin_signup=Admin(user[0]['s_id'], user[0]['s_email'])
                 login_user(user=admin_signup, remember=True)
                 return redirect(url_for('admin',index=user[0]['s_id']))
-    return render_template("signup.html",user=current_user)
+    return render_template("signup.html",user=current_user,common_url=common_url)
 
 if __name__=="__main__":
     init_db()
-    socket.run(app,host="0.0.0.0",port=2003,debug=True)
+    sockets.run(app,host=get_ip_address(),port=2003,debug=True)

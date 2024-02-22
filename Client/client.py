@@ -6,14 +6,31 @@ from flask_login import *
 from wtforms import StringField, IntegerField, TextAreaField, HiddenField, SelectField
 import sqlite3
 from datetime import date
+import socket
 
+
+def get_ip_address():
+    try:
+        # Create a socket object
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Connect to any IP address and port (here, Google's public DNS server)
+        s.connect(('8.8.8.8', 80))
+
+        # Get the local IP address bound to the socket
+        ip_address = s.getsockname()[0]
+
+        return ip_address
+    except Exception as e:
+        print("Error:", e)
+        return None
 
 
 app=Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'mysecret'
-# photos = UploadSet('photos', IMAGES)
-socket = SocketIO(app)
+common_url=f'http://{get_ip_address()}:2003'
+sockets = SocketIO(app)
 #login Manger
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -189,7 +206,7 @@ def handle_cart():
             quantity_total += float(item['quantity'])
             cart_items.append(cart_item)
     db.close()
-    grand_total_plus_shipping = total_price + 1000
+    grand_total_plus_shipping = total_price + 10
 
     return cart_items, grand_total, grand_total_plus_shipping, quantity_total
 
@@ -249,7 +266,7 @@ def user_login():
             # Invalid credentials
             flash('Invalid email or password. Please try again.', 'error')  # Error message
 
-    return render_template('login.html',user=current_user)
+    return render_template('login.html',user=current_user,common_url=common_url)
 
 
 @app.route("/users_signup",methods=['GET','POST'])
@@ -283,9 +300,9 @@ def users_signup():
             if user and check_password_hash(user[0]['password_hash'], password1):
                 login_user(User(user[0]['user_id'], user[0]['user_email']), remember=True)
                 return redirect(url_for('index'))
-    return render_template("signup.html",user=current_user)
+    return render_template("signup.html",user=current_user,common_url=common_url)
 
 
 if __name__=="__main__":
     init_db()
-    socket.run(app,host="0.0.0.0",port=2802,debug=True)
+    sockets.run(app,host=get_ip_address(),port=2802,debug=True)
