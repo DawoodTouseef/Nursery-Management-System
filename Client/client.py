@@ -3,7 +3,7 @@ from flask_socketio import SocketIO
 from flask import *
 from flask_wtf import FlaskForm
 from flask_login import *
-from wtforms import StringField, IntegerField, TextAreaField, HiddenField, SelectField
+from wtforms import StringField, IntegerField,  HiddenField, SelectField
 import sqlite3
 from datetime import date
 import socket

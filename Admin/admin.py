@@ -29,6 +29,7 @@ def get_ip_address():
 app=Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'mysecret'
+#Path where the image is stored
 app.config['UPLOAD_FOLDER'] = '/media/lenovo/Windows 10/Nursery-Management-System/Client/Product'
 common_url=f'http://{get_ip_address()}:2802'
 sockets = SocketIO(app)
