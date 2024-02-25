@@ -26,5 +26,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run Admin script
       run: |
-        python Admin/admin.py
+        export FLASK_APP=Admin/admin.py
+        flask run --host=0.0.0.0 
 
