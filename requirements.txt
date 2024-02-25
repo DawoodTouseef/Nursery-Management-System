@@ -3,3 +3,4 @@ Flask
 WTForms
 Flask-SocketIO
 Flask-WTF
+eventlet
