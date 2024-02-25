@@ -1,3 +1,4 @@
 Werkzeug
 Flask
 WTForms
+Flask-SocketIO
