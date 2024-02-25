@@ -2,3 +2,4 @@ Werkzeug
 Flask
 WTForms
 Flask-SocketIO
+Flask-WTF
