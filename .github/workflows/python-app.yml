@@ -27,6 +27,4 @@ jobs:
     - name: Run Admin script
       run: |
         python Admin/admin.py
-    - name: Run Client script
-      run: |
-        python Client/client.py
+
