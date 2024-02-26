@@ -106,20 +106,12 @@ class Admin(UserMixin):
     def get_id(self):
         return str(self.s_id)
 
-@app.route('/add_stock/<pid>/<sid>')
-def add_stock(pid,sid):
-    db=get_db()
-    db.execute("UPDATE Product SET stock_available = stock_available + ? WHERE p_id = ? AND supplier_id= ?;",
-               (1,pid,sid))
-    db.commit()
-    return redirect(url_for('admin',index=sid))
 
-
-@app.route('/delete_stock/<pid>/<sid>')
-def delete_stock(pid,sid):
+@app.route('/delete_product/<pid>/<sid>')
+def delete_product(pid,sid):
     db=get_db()
-    db.execute("UPDATE Product SET stock_available = stock_available -  ? WHERE p_id = ? AND supplier_id= ?;",
-               (1,pid,sid))
+    db.execute("DELETE FROM  Product WHERE p_id = ? AND supplier_id= ?;",
+               (pid,sid))
     db.commit()
     return redirect(url_for('admin',index=sid))
 # Define route for admin

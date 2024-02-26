@@ -55,7 +55,9 @@ CREATE TABLE IF NOT EXISTS `order_item` (
   `order_item_id` INTEGER PRIMARY KEY,
   `p_id` INTEGER,
   `u_id` INTEGER,
+  `order_id` INTEGER,
   `quantity` INTEGER,
+   FOREIGN KEY (`order_id`) REFERENCES `Orders` (`order_id`),
   FOREIGN KEY (`p_id`) REFERENCES `Product` (`p_id`),
   FOREIGN KEY (`u_id`) REFERENCES `users` (`user_id`)
 );
