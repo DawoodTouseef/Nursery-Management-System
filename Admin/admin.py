@@ -52,7 +52,7 @@ class EditProduct(FlaskForm):
     stock = IntegerField('Stock')
     description = TextAreaField('Description')
     #image=StringField("image")
-    image = FileField('Image', validators=[DataRequired()])
+    image = FileField('Image')
 
 def get_db():
     db = sqlite3.connect(DATABASE)
@@ -202,7 +202,16 @@ def edit_product(id,sid):
         stock = form.stock.data
         description = form.description.data
         conn = get_db()
-        conn.execute('UPDATE Product SET p_name = ?, price = ?, stock_available = ?, Description = ? WHERE p_id = ?', (name, price, stock, description, id))
+        if name:
+            conn.execute('UPDATE Product SET p_name = ? WHERE p_id = ?', (name, id))
+        if price:
+            conn.execute('UPDATE Product SET price = ? WHERE p_id = ?', (price, id))
+        if stock:
+            conn.execute('UPDATE Product SET stock_available = ? WHERE p_id = ?', (stock, id))
+        if description:
+            conn.execute('UPDATE Product SET Description = ? WHERE p_id = ?', (description, id))
+        else:
+            conn.execute('UPDATE Product SET p_name = ?, price = ?, stock_available = ?, Description = ? WHERE p_id = ?', (name, price, stock, description, id))
         conn.commit()
         conn.close()
         return redirect(url_for('admin',index=sid))
