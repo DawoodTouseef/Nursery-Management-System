@@ -1,3 +1,7 @@
 Werkzeug
 Flask
 WTForms
+Flask-SocketIO
+Flask-WTF
+eventlet
+Flask-Login
