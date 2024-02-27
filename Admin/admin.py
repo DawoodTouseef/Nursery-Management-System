@@ -123,7 +123,9 @@ def admin(index):
     products = [dict(row) for row in products_cursor.fetchall()]
     products_in_stock_cursor = db.execute("SELECT * FROM Product WHERE stock_available > 0;")
     products_in_stock = ([dict(row) for row in products_in_stock_cursor.fetchall()])
-    orders_cursor = db.execute("SELECT * FROM Orders o ,Product p WHERE o.p_id=p.p_id AND supplier_id=?",(index))
+    orders_cursor = db.execute("SELECT * FROM Orders o JOIN Product p WHERE p.supplier_id = ? ;",
+                               (index,))
+
     orders = [dict(row) for row in orders_cursor.fetchall()]
     order_totals = []
     for order in orders:
@@ -239,7 +241,7 @@ def order(order_id):
         orders_info.append(order_info)
     quantity_total=db.execute("SELECT SUM(oi.quantity) FROM order_item oi WHERE oi.order_item_id = ?;",(order_id))
     quantity_total=[{"quantity_total":row['SUM(oi.quantity)']} for row in quantity_total.fetchall()]
-    product=db.execute('SELECT p.p_id,p.p_name,p.price,oi.quantity,p.price FROM Product as p,order_item as oi WHERE p.p_id=oi.p_id ;')
+    product=db.execute('SELECT p.p_id,p.p_name,p.price,oi.quantity,p.price FROM Product as p,order_item as oi WHERE p.p_id=oi.p_id AND oi.order_id=? ;',(order_id))
     products=[dict(row) for row in product.fetchall()]
     return render_template('view-order.html',product=products, order=orders_info[0], admin=True,order_total=order_totals,quantity_total=quantity_total[0]['quantity_total'],admin_log=current_user,home=current_user.s_id)
 

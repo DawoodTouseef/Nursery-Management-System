@@ -223,16 +223,21 @@ def checkout():
 
         user_id = current_user.user_id
 
-        # Insert order items into order_item table
-        for product in products:
-            db.execute("INSERT INTO order_item ( p_id, u_id, quantity) VALUES ( ?, ?, ?);", (product['id'], user_id, product['quantity']))
-
-            # Update product stock
-            db.execute("UPDATE Product SET stock_available = stock_available - ? WHERE p_id = ?;", (product['quantity'], product['id']))
-        reference = ''.join([random.choice('ABCDE') for _ in range(5)])
         # Insert order into Orders table
-        db.execute("INSERT INTO Orders (reference,p_id, u_id, order_date, Delivery_date, status, total_amt, PaymentType,First_Name,last_Name,country,state,city,u_contact,u_address,user_email) VALUES (?,?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?);",
-                   (reference,products[0]['id'], user_id, date.today(), None, 'PENDING', grand_total, form.payment_type.data,form.first_name.data,form.last_name.data,form.country.data,form.state.data,form.city.data,form.phone_number.data,form.address.data,form.email.data))
+        reference = ''.join([random.choice('ABCDE') for _ in range(5)])
+        db.execute(
+            "INSERT INTO Orders (reference, u_id, order_date, status, total_amt, PaymentType, First_Name, last_Name, country, state, city, u_contact, u_address, user_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+            (reference, user_id, date.today(), 'PENDING', grand_total_plus_shipping, form.payment_type.data,
+             form.first_name.data, form.last_name.data, form.country.data, form.state.data, form.city.data,
+             form.phone_number.data, form.address.data, form.email.data))
+        db.commit()
+
+        # Get the order_id of the newly inserted order
+        order_id = db.execute("SELECT last_insert_rowid();").fetchone()[0]
+        # Insert order items into order_item table
+        for item in session['cart']:
+            db.execute("INSERT INTO order_item (order_id, p_id, u_id, quantity) VALUES (?, ?, ?, ?);",
+                       (order_id, item['id'], user_id, item['quantity']))
         db.commit()
 
         session['cart'] = []
@@ -240,8 +245,8 @@ def checkout():
 
         return redirect(url_for('index'))
 
-    return render_template('checkout.html',user=current_user, form=form, grand_total=grand_total, grand_total_plus_shipping=grand_total_plus_shipping, quantity_total=quantity_total)
-
+    return render_template('checkout.html', user=current_user, form=form, grand_total=grand_total,
+                           grand_total_plus_shipping=grand_total_plus_shipping, quantity_total=quantity_total)
 @app.route('/user_logout')
 @login_required
 def luser_ogout():

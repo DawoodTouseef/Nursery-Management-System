@@ -472,5 +472,5 @@ import sqlite3
 
 connection=sqlite3.connect('plants.db')
 con=connection.cursor()
-data=con.execute('SELECT * FROM  order_item')
+data=con.execute('SELECT * FROM Orders o ,Product p WHERE  supplier_id=1')
 print(data.fetchall())
