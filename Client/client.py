@@ -210,6 +210,17 @@ def handle_cart():
 
     return cart_items, grand_total, grand_total_plus_shipping, quantity_total
 
+@app.route('/search')
+def search():
+    query = request.args.get('query')
+    db = get_db()
+    products_cursor = db.execute('SELECT * FROM Product WHERE p_name LIKE ?', ('%' + query + '%',))
+    products = [dict(row) for row in products_cursor.fetchall()]
+    avaiable=True
+    if products:
+        avaiable=False
+    return render_template('search.html', products=products, query=query,user=current_user,avaiable=avaiable)
+
 # Define route for checkout
 @app.route('/checkout', methods=['GET', 'POST'])
 @login_required

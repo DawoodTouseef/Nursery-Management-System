@@ -245,6 +245,8 @@ def order(order_id):
     products=[dict(row) for row in product.fetchall()]
     return render_template('view-order.html',product=products, order=orders_info[0], admin=True,order_total=order_totals,quantity_total=quantity_total[0]['quantity_total'],admin_log=current_user,home=current_user.s_id)
 
+
+@app.route('/')
 @app.route('/admin_login',methods=['GET','POST'])
 def admin_login():
     db=get_db()
