@@ -1,14 +1,19 @@
 # Nursery Management System
 
 ## Description
-The Nursery Management System is a web-based application designed to streamline the management of nurseries or plant nurseries. It facilitates tasks such as inventory management, sales tracking, customer management, and plant care management. The system aims to simplify the administrative tasks involved in running a nursery business, allowing users to focus more on plant care and customer service.
+Nursery management system is a software where a person can buy their necessary plants. They can find a various brand and categories plants. After from all the finding they can compare the product price and they can order their plant that they needed. One dealer can easily add a product for selling. After from all the finding they can compare the product price and they can order their plant that they needed.
 
 ## Features
-- **Inventory Management:** Keep track of plant inventory including plant types, quantities, and prices.
-- **Sales Tracking:** Record sales transactions, generate invoices, and track revenue.
-- **Customer Management:** Maintain a database of customer information, purchase history, and preferences.
-- **Plant Care Management:** Schedule plant care tasks such as watering, fertilizing, and pruning, and receive reminders for upcoming tasks.
-- **Reporting:** Generate reports on inventory, sales, and customer data for analysis and decision-making.
+1. **Product Catalog:** Browse a wide variety of plants organized by brand and categories.
+2. **Product Comparison:** Compare prices and attributes of different plants to make informed decisions.
+3. **Order Placement:** Easily place orders for desired plants with secure payment processing.
+4. **Dealer Portal:** Dealers can add new products to the catalog, specify details, and manage listings.
+5. **User Accounts:** Create accounts to save preferences, view order history, and track order status.
+6. **Search Functionality:** Quickly find plants by name, category, brand, or other criteria.
+7. **Responsive Design:** Enjoy a seamless experience across desktops, tablets, and smartphones.
+8. **Payment Gateway Integration:** Securely pay for orders using credit/debit cards or digital wallets.
+9. **Order Management:** Administrators can track orders, manage fulfillment, and generate invoices.
+10. **Feedback and Reviews:** Leave feedback and reviews for purchased products to build trust.
 
 ## Installation
 1. Clone the repository:
@@ -60,6 +65,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 For questions or inquiries, please contact [tdawood140@gmail.com](mailto:tdawood140@gmail.com).
-
-
-
