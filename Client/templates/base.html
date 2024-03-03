@@ -69,11 +69,23 @@
                     </ul>
                 </div>
                 <div class="navbar-header">
+                    <!-- Form for the search bar -->
                     <form action="{{ url_for('search') }}" method="GET">
-                            <input type="text" name="query" placeholder="Search for products...">
-                            <button type="submit">Search</button>
+                        <!-- Input field for entering the search query -->
+                        <input type="text" name="query" placeholder="Search for Plants Library..." style="
+                        display:center;
+                        width: 800px;
+                        margin-top:1.5%;
+                        margin-bottom:0.5%;
+                        height: 35px;
+                        border: 1px solid #ccc;
+                        border: 1px solid black;" >
+                        <!-- Submit button to initiate the search -->
+                        <button type="submit" style="width: 40px;height: 35px;background-color:yellow;"><i class="glyphicon glyphicon-search"></i></button>
+
                     </form>
                 </div>
+
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav navbar-right">
