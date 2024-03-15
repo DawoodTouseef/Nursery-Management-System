@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Users-Login{% endblock %}
+{% block title %}Users-Login |Plants Library{% endblock %}
 {% block body %}
 <form method="POST">
   <h3 align="center">User-Login</h3>
@@ -23,7 +23,7 @@
       placeholder="Enter password"
     />
   </div>
-  <a href="{{ common_url }}/admin_login">Are you a Merchant?</a>
+  <a href="{{ common_url }}/admin_login">Are you a Merchant?</a><p></p>
   <a href="/users_signup">Don't Have a Account?</a>
   <br>
   <button type="submit" class="btn btn-primary">Login</button>

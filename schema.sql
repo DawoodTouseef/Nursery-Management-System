@@ -22,8 +22,6 @@ CREATE TABLE IF NOT EXISTS `supplier` (
 
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` INTEGER PRIMARY KEY,
-  `First_Name` VARCHAR(35),
-  `last_Name` VARCHAR(35),
   `user_email` VARCHAR(25),
   `password_hash` VARCHAR(25)
 );
@@ -31,13 +29,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS  `Orders` (
   `order_id` INTEGER PRIMARY KEY,
   `reference` VARCHAR(45),
-  `p_id` INTEGER,
   `u_id` INTEGER,
   `order_date` DATE,
   `Delivery_date` VARCHAR(45),
   `First_Name` VARCHAR(35),
   `last_Name` VARCHAR(35),
-  `user_email` VARCHAR(25),
   `country`VARCHAR(25),
   `state`VARCHAR(25),
   `city` VARCHAR(25),

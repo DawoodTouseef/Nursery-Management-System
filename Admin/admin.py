@@ -34,6 +34,7 @@ app.config['UPLOAD_FOLDER'] = '/media/lenovo/Windows 10/Nursery-Management-Syste
 common_url=f'http://{get_ip_address()}:2802'
 sockets = SocketIO(app)
 #login Manger
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 DATABASE="./../plants.db"
@@ -43,7 +44,6 @@ class AddProduct(FlaskForm):
     price = IntegerField('Price')
     stock = IntegerField('Stock')
     description = TextAreaField('Description')
-    #image=StringField("image")
     image = FileField('Image', validators=[DataRequired()])
 
 class EditProduct(FlaskForm):
@@ -51,7 +51,6 @@ class EditProduct(FlaskForm):
     price = IntegerField('Price')
     stock = IntegerField('Stock')
     description = TextAreaField('Description')
-    #image=StringField("image")
     image = FileField('Image')
 
 def get_db():
@@ -67,21 +66,6 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
-
-class Admin(UserMixin):
-    def __init__(self, user_id, email):
-        self.s_id = user_id
-        self.email = email
-    @staticmethod
-    def get_by_id(user_id):
-        db=get_db()
-        user_data = db.execute("SELECT * FROM supplier WHERE s_id = ?", (user_id,)).fetchone()
-        if user_data:
-            return Admin(user_data['s_id'], user_data['s_email'])
-        else:
-            return None
-    def get_id(self):
-        return str(self.s_id)
 # Define a Admin loader function
 @login_manager.user_loader
 def load_user(user_id):
@@ -184,18 +168,19 @@ def add():
     return render_template('add-product.html', admin=True, form=form,admin_log=current_user,home=url_for('admin',index=current_user.s_id))
 
 # Route to edit an existing product
-@app.route('/edit_product/<int:id>/<int:sid>', methods=['GET', 'POST'])
-def edit_product(id,sid):
+@app.route('/edit_product/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_product(id):
     conn = get_db()
-    product = conn.execute('SELECT * FROM Product WHERE p_id = ?', (id,)).fetchone()
-    conn.close()
-    form = EditProduct(obj=product)
-    if form.validate_on_submit():
+    product = conn.execute('SELECT * FROM Product WHERE p_id = ?', (id,))
+    product = [dict(row) for row in product.fetchall()]
+    form = EditProduct(obj=product[0])
+
+    if  form.validate_on_submit():
         name = form.name.data
         price = form.price.data
         stock = form.stock.data
         description = form.description.data
-        conn = get_db()
         if name:
             conn.execute('UPDATE Product SET p_name = ? WHERE p_id = ?', (name, id))
         if price:
@@ -204,12 +189,12 @@ def edit_product(id,sid):
             conn.execute('UPDATE Product SET stock_available = ? WHERE p_id = ?', (stock, id))
         if description:
             conn.execute('UPDATE Product SET Description = ? WHERE p_id = ?', (description, id))
-        else:
-            conn.execute('UPDATE Product SET p_name = ?, price = ?, stock_available = ?, Description = ? WHERE p_id = ?', (name, price, stock, description, id))
+
         conn.commit()
         conn.close()
-        return redirect(url_for('admin',index=sid))
-    return render_template('edit_product.html', form=form, product=product,user=current_user)
+        return redirect(url_for('admin',index=current_user.s_id))
+
+    return render_template('edit_product.html', form=form, product=product[0],user=current_user,home=url_for('admin',index=current_user.s_id))
 
 @app.route('/order/<order_id>')
 @login_required

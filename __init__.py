@@ -467,10 +467,10 @@ def users_signup():
 if __name__=="__main__":
     init_db()
     socket.run(app,host="0.0.0.0",debug=True,port=2802)
-"""
+
 import sqlite3
 
 connection=sqlite3.connect('plants.db')
 con=connection.cursor()
 data=con.execute('SELECT * FROM Orders o ,Product p WHERE  supplier_id=1')
-print(data.fetchall())
+print(data.fetchall())"""

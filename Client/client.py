@@ -29,6 +29,7 @@ def get_ip_address():
 app=Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'mysecret'
+app.config['UPLOAD_FOLDER'] = '/media/lenovo/Windows 10/Nursery-Management-System/Client/Product'
 common_url=f'http://{get_ip_address()}:2003'
 sockets = SocketIO(app)
 #login Manger
@@ -96,6 +97,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     db = get_db()
+
     cur = db.execute('SELECT * FROM Product')
     products = [{'id': row['p_id'], 'name': row['p_name'], 'price': row['price'], 'stock': row['stock_available'],
                  'description': row['description'], 'image': row['image']} for row in cur.fetchall()]
@@ -105,10 +107,14 @@ def index():
 
 @app.route('/product/image/<index>')
 def product_image(index):
+    import os
     # Assuming index is the position of the image in the list of product images
     # Retrieve the path to the image based on the index
-    image_path = f"Product/{index}"  # Adjust the path based on your file naming convention
-    return send_file(image_path)
+    image_path = f"{os.path.join(app.config['UPLOAD_FOLDER'], index)}"  # Adjust the path based on your file naming convention
+    image='image/png'
+    if image_path.endswith(".jpeg"):
+        image='image/jpeg'
+    return send_file(image_path,mimetype=image)
 
 
 # Define route for viewing a product
@@ -216,10 +222,10 @@ def search():
     db = get_db()
     products_cursor = db.execute('SELECT * FROM Product WHERE p_name LIKE ?', ('%' + query + '%',))
     products = [dict(row) for row in products_cursor.fetchall()]
-    avaiable=True
+    available=True
     if products:
-        avaiable=False
-    return render_template('search.html', products=products, query=query,user=current_user,avaiable=avaiable)
+        available=False
+    return render_template('search.html', products=products, query=query,user=current_user,avaiable=available)
 
 # Define route for checkout
 @app.route('/checkout', methods=['GET', 'POST'])
@@ -289,8 +295,6 @@ def user_login():
 def users_signup():
     db=get_db()
     if request.method=="POST":
-        firstName=request.form.get('firstName')
-        lastName=request.form.get('lastName')
         email = request.form.get('email')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -301,15 +305,13 @@ def users_signup():
             print("Email already exists.")
         elif len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error')
-        elif len(firstName) < 2:
-            flash('First Name must be greater than 1 character.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            db.execute('INSERT INTO users(First_Name,last_Name,user_email,password_hash) VALUES(?,?,?,?)',
-                       (firstName,lastName,email,generate_password_hash(password1,method='scrypt')))
+            db.execute('INSERT INTO users(user_email,password_hash) VALUES(?,?,?,?)',
+                       (email,generate_password_hash(password1,method='scrypt')))
             db.commit()
             user_sql = db.execute("SELECT  * FROM users WHERE user_email = ?", (email,))
             user = [dict(row) for row in user_sql.fetchall()]
@@ -322,3 +324,4 @@ def users_signup():
 if __name__=="__main__":
     init_db()
     sockets.run(app,host=get_ip_address(),port=2802,debug=True)
+    #app.run(port=2802, debug=True)
